@@ -22,13 +22,16 @@ from opencensus.trace.samplers import ProbabilitySampler
 from opencensus.trace.tracer import Tracer
 from opencensus.ext.flask.flask_middleware import FlaskMiddleware
 
+
+
+
 # Logging
 logger = logging.getLogger(__name__)
-handler = AzureLogHandler(connection_string='InstrumentationKey=e4c52fa7-aac2-4d39-910d-11c27d724ee2')
+handler = AzureLogHandler(connection_string='InstrumentationKey=0769e578-423b-40f4-97c4-7eae58fdc359')
 handler.setFormatter(logging.Formatter('%(traceId)s %(spanId)s %(message)s'))
 logger.addHandler(handler)
 # Logging custom Events 
-logger.addHandler(AzureEventHandler(connection_string='InstrumentationKey=e4c52fa7-aac2-4d39-910d-11c27d724ee2'))
+logger.addHandler(AzureEventHandler(connection_string='InstrumentationKey=0769e578-423b-40f4-97c4-7eae58fdc359'))
 # Set the logging level
 logger.setLevel(logging.INFO)
 
@@ -40,13 +43,13 @@ config_integration.trace_integrations(['logging'])
 config_integration.trace_integrations(['requests'])
 exporter = metrics_exporter.new_metrics_exporter(
 enable_standard_metrics=True,
-connection_string='InstrumentationKey=e4c52fa7-aac2-4d39-910d-11c27d724ee2')
+connection_string='InstrumentationKey=0769e578-423b-40f4-97c4-7eae58fdc359')
 view_manager.register_exporter(exporter)
 
 # Tracing
 tracer = Tracer(
  exporter=AzureExporter(
-     connection_string='InstrumentationKey=e4c52fa7-aac2-4d39-910d-11c27d724ee2'),
+     connection_string='InstrumentationKey=0769e578-423b-40f4-97c4-7eae58fdc359'),
  sampler=ProbabilitySampler(1.0),
 )
 
@@ -56,7 +59,7 @@ app = Flask(__name__)
 # Requests
 middleware = FlaskMiddleware(
  app,
- exporter=AzureExporter(connection_string="InstrumentationKey=e4c52fa7-aac2-4d39-910d-11c27d724ee2"),
+ exporter=AzureExporter(connection_string="InstrumentationKey=0769e578-423b-40f4-97c4-7eae58fdc359"),
  sampler=ProbabilitySampler(rate=1.0)
 )
 
