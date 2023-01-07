@@ -1,12 +1,12 @@
-import logging
+
+from flask import Flask, render_template, request
 import os
 import random
 import socket
 import sys
 from datetime import datetime
-
 import redis
-from flask import Flask, render_template, request
+import logging
 
 # App Insights
 # TODO: Import required libraries for App Insights
@@ -89,7 +89,7 @@ if "TITLE" in os.environ and os.environ["TITLE"]:
 else:
     title = app.config["TITLE"]
 
-# Redis Connection to a local server running on the same machine where the current FLask app is running.
+# Redis Connection.
 r = redis.Redis()
 
 # Change title to host name to demo NLB
@@ -97,10 +97,8 @@ if app.config["SHOWHOST"] == "true":
     title = socket.gethostname()
 
 # Init Redis
-if not r.get(button1):
-    r.set(button1, 0)
-if not r.get(button2):
-    r.set(button2, 0)
+if not r.get(button1): r.set(button1, 0)
+if not r.get(button2): r.set(button2, 0)
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -129,6 +127,7 @@ def index():
 
     elif request.method == "POST":
         if request.form["vote"] == "reset":
+
             # Empty table and return results
             r.set(button1, 0)
             r.set(button2, 0)
@@ -180,7 +179,7 @@ def index():
 
 
 if __name__ == "__main__":
-    # comment line below when deploying to VMSS
-    # app.run()  # local
-    # uncomment the line below before deployment to VMSS
+    # TODO: Use the statement below when running locally
+    #app.run() 
+    # TODO: Use the statement below before deployment to VMSS
     app.run(host='0.0.0.0', threaded=True, debug=True) # remote
